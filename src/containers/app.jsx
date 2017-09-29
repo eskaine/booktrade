@@ -5,7 +5,9 @@ var Head = require('../components/head.jsx');
 var NavBar = require('../components/navbar.jsx');
 var Footer = require('../components/footer.jsx');
 var Home = require('../components/home.jsx');
-var Signup = require('../components/signup.jsx');
+var Authenticate = require('../components/authenticate.jsx');
+//var Dashboard = require('../components/dashboard.jsx');
+  //<PrivateRoute path="/dashboard" component={Dashboard} />
 
 module.exports = class App extends React.Component {
 
@@ -19,7 +21,9 @@ module.exports = class App extends React.Component {
           <NavBar/>
 
           <Route exact path="/" component={Home} />
-          <Route path="/signup" component={Signup} />
+          <Route path="/signup" component={Authenticate} />
+          <Route path="/login" component={Authenticate} />
+
 
           <Footer/>
 

@@ -17,16 +17,13 @@ module.exports = class NavBar extends React.Component {
               <li className="nav-item active">
                 <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">Link</a>
-              </li>
             </ul>
-            <ul className="navbar-nav float-right">
+            <ul className="navbar-nav justify-content-end">
               <li className="nav-item">
                 <a className="nav-link" href="/signup">Sign Up</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Login</a>
+                <a className="nav-link" href="/login">Login</a>
               </li>
             </ul>
           </div>

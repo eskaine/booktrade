@@ -4,19 +4,31 @@ var React = require('react');
 var ReactDOMServer = require('react-dom/server');
 var ReactRouter = require('react-router');
 
+
+/*
+var Redux = require('redux');
+var Provider = require('react-redux').Provider;
+
+function reducer(state) {
+  return state;
+};*/
+
 var App = require('../containers/app.jsx');
 
 const routes = ['/', '/signup', '/login'];
 
-module.exports = function(app) {
+module.exports = function(app, passport) {
 
   app.route('*').get(function(req, res) {
-    var props = {
+
+    /*
+    var state = {
       title: 'React'
-    };
+    };*/
+
+  //  var store = Redux.createStore(reducer, state);
 
     routes.reduce(function(index, route) {
-
 
       ReactRouter.matchPath(req.url, {
         path: route,
@@ -25,28 +37,25 @@ module.exports = function(app) {
     });
 
     res.send(ReactDOMServer.renderToString(
-      <ReactRouter.StaticRouter context={{}} location={req.url}>
-        <App />
-      </ReactRouter.StaticRouter>
+  //    <Provider store={store}>
+        <ReactRouter.StaticRouter context={{}} location={req.url}>
+          <App/>
+        </ReactRouter.StaticRouter>
+//      </Provider>
     ));
 
   });
 
-  /*
-  app.route('/').get(function (req, res){
+  app.route('/login')
+  .post(passport.authenticate('login', {}));
 
-    var props = {title: 'React'};
-    var index = ReactDOMServer.renderToString(React.createElement(App, props));
-    res.send(index);
-  });
+  app.route('/signup')
+  .post(passport.authenticate('signup', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/signup'
+  })/*, function(req, res) {
+    console.log(req.body);
+    console.log(req);
+  }*/);
 
-  app.route('/signup').get(function (req, res){
-    var signup = ReactDOMServer.renderToString(React.createElement(App));
-    res.send(signup);
-  });
-
-  app.route('/login').get(function (req, res){
-
-  });
-*/
 };
