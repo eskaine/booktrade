@@ -1,0 +1,25 @@
+include ../src/templates/mixin.pug
+
+doctype html
+html
+  include ../src/templates/head.pug
+  
+  body
+    - var active = path, isAuthenticated = true
+    include ../src/templates/navbar.pug
+    
+    .container
+      button.btn.btn-success(type="button") Your Requested Books
+      button.btn.btn-primary.btn-margin(type="button") Pending Your Approvals
+      h1 All Books
+      hr
+      
+      .container
+        if books
+          each book in books
+            +book(book)
+        
+    include ../src/templates/footer.pug
+    
+    
+    

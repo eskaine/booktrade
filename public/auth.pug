@@ -1,0 +1,25 @@
+include ../src/templates/mixin.pug
+
+doctype html
+html
+  include ../src/templates/head.pug
+  
+  body
+    - var active = path
+    include ../src/templates/navbar.pug
+    
+    .container
+      .row
+        .col-md-6
+          h1=title
+          br
+          form(action=path method="POST")
+            if title === "Sign Up"
+              +form-group("name", "Name", "Name")
+            +form-group("email", "Email address", "Enter email")
+            +form-group-password("Password", "password")
+            br
+            button.btn(class=buttonclass type="submit")=buttonlabel
+            a.btn.btn-dark.btn-margin(href=button2path)=button2label
+    
+    include ../src/templates/footer.pug

@@ -1,0 +1,32 @@
+include ../src/templates/mixin.pug
+
+doctype html
+html
+  include ../src/templates/head.pug
+
+  body
+    - var active = "/profile", isAuthenticated = true
+    include ../src/templates/navbar.pug
+
+    .container
+      .row
+        .col-md-6
+          h1 Update Profile
+          br
+          form(action="/profile" method="POST")
+            +form-group("name", "Name", "Name", name)
+            +form-group("city", "City", "City", city)
+            +form-group("state", "State", "State", state)
+            br
+            button.btn(class="btn btn-primary" type="submit") Save Changes
+          br
+          br
+          h1 Change Password
+          br
+          form(action="/password" method="POST")
+            +form-group-password("Old Password", "old-password")
+            +form-group-password("New Password", "new-password")
+            br
+            button.btn(class="btn btn-primary" type="submit") Save Changes
+
+    include ../src/templates/footer.pug

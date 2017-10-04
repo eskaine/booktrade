@@ -6,16 +6,24 @@ require('babel-register')({
 
 var path = process.cwd();
 var express = require('express');
+var session = require('express-session');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var bodyParser = require('body-parser');
 var routes = require('./src/routes/routes.js');
 
 var app = express();
 require('dotenv').load();
-require('./src/config/passport')(passport);
+require('./src/handlers/passport')(passport);
 
-var bodyParser = require('body-parser');
+app.set('views', path + '/public');
+app.set('view engine', 'pug');
 
+app.use(session({
+  secret: process.env.SESSION,
+  resave: false,
+  saveUninitialized: true
+}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());

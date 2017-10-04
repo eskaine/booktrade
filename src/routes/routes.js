@@ -1,61 +1,86 @@
 'use strict';
 
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
-var ReactRouter = require('react-router');
-
-
-/*
-var Redux = require('redux');
-var Provider = require('react-redux').Provider;
-
-function reducer(state) {
-  return state;
-};*/
-
-var App = require('../containers/app.jsx');
-
-const routes = ['/', '/signup', '/login'];
+var BookHandler = require('../handlers/bookHandler.js');
+var ProfileHandler = require('../handlers/profileHandler.js')
 
 module.exports = function(app, passport) {
 
-  app.route('*').get(function(req, res) {
+  var bookHandler = new BookHandler();
+  var profileHandler = new ProfileHandler();
 
-    /*
-    var state = {
-      title: 'React'
-    };*/
+  function isLogged(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    } else {
+      res.redirect('/login');
+    }
+  }
 
-  //  var store = Redux.createStore(reducer, state);
+  function alreadyLogged(req, res, next) {
+    if (req.isAuthenticated()) {
+      res.redirect('/mybooks');
+    } else {
+      return next();
+    }
+  }
 
-    routes.reduce(function(index, route) {
-
-      ReactRouter.matchPath(req.url, {
-        path: route,
-        exact: true
-      });
+  app.route('/').get(function(req, res) {
+    var name = null;
+    if (req.user) {
+      name = req.user.name
+    }
+    res.render('index.pug', {
+      isAuthenticated: req.isAuthenticated(),
+      name: name
     });
-
-    res.send(ReactDOMServer.renderToString(
-  //    <Provider store={store}>
-        <ReactRouter.StaticRouter context={{}} location={req.url}>
-          <App/>
-        </ReactRouter.StaticRouter>
-//      </Provider>
-    ));
-
   });
 
-  app.route('/login')
-  .post(passport.authenticate('login', {}));
+  app.route('/login').get(alreadyLogged, function(req, res) {
+    res.render('auth.pug', {
+      path: req.url,
+      title: "Login",
+      buttonlabel: "Login",
+      buttonclass: "btn-primary",
+      button2label: "Sign Up",
+      button2path: "/signup"
+    });
+  }).post(passport.authenticate('login', {
+    successRedirect: '/mybooks',
+    failureRedirect: '/login'
+  }));
 
-  app.route('/signup')
-  .post(passport.authenticate('signup', {
-    successRedirect: '/dashboard',
+  app.route('/signup').get(alreadyLogged, function(req, res) {
+    res.render('auth.pug', {
+      path: req.url,
+      title: "Sign Up",
+      buttonlabel: "Create Account",
+      buttonclass: "btn-success",
+      button2label: "Login",
+      button2path: "/login"
+    });
+  }).post(passport.authenticate('signup', {
+    successRedirect: '/mybooks',
     failureRedirect: '/signup'
-  })/*, function(req, res) {
-    console.log(req.body);
-    console.log(req);
-  }*/);
+  }));
+
+  app.route('/add').post(bookHandler.queryBook);
+
+  app.route('/mybooks').get(isLogged, bookHandler.displayMyBooks);
+
+  app.route('/profile')
+  .get(isLogged, profileHandler.getProfile)
+  .post(profileHandler.updateProfile);
+
+  app.route('/password')
+  .post(profileHandler.updatePassword);
+
+  app.route('/logout').get(function(req, res) {
+    req.logout();
+    res.redirect('/');
+  });
+
+  app.route('*').get(function(req, res){
+    res.redirect('/');
+  });
 
 };

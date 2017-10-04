@@ -1,0 +1,21 @@
+include mixin.pug
+
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+  .container
+    a.navbar-brand(href="/") bookTrade
+    
+    button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation")
+      span.navbar-toggler-icon
+        
+    #navbar-menu.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto
+        +nav-item("/", "Home")
+      ul.navbar-nav.justify-content-end
+        if isAuthenticated
+          +nav-item("/allbooks", "All Books")
+          +nav-item("/mybooks", "My Books")
+          +nav-item("/profile", name)
+          +nav-item("/logout", "Logout")
+        else 
+          +nav-item("/signup", "Sign Up")
+          +nav-item("/login", "Login")

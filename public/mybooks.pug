@@ -1,0 +1,28 @@
+include ../src/templates/mixin.pug
+
+doctype html
+html
+  include ../src/templates/head.pug
+  
+  body
+    - var active = "/mybooks", isAuthenticated = true
+    include ../src/templates/navbar.pug
+    
+    .container
+      button.btn.btn-success(type="button") Your Requested Books
+      button.btn.btn-primary.btn-margin(type="button") Pending Your Approvals
+      form.form-inline(action="/add" method="POST")
+        h1 My Books
+        input#add.form-control(type="text" name="book" placeholder="Add Book")
+        button.btn.btn-primary(type="submit") Add
+      hr
+      
+      .container
+        if books
+          each book in books
+            +book(book)
+        
+    include ../src/templates/footer.pug
+    
+    
+    
