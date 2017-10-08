@@ -1,25 +1,19 @@
-include ../src/templates/mixin.pug
-
-doctype html
-html
-  include ../src/templates/head.pug
+extends ../src/templates/layout
   
-  body
-    - var active = path
-    include ../src/templates/navbar.pug
-    
-    .container
-      .row
-        .col-md-6
-          h1=title
+block content  
+  .container
+    .row
+      .col-md-6
+        h1=title
+        br
+        - var id = path.split("/")
+        form(id=id[1] action=path method="POST" novalidate)
+          if title === "Sign Up"
+            +form-group(id[1], "name", "Name", "Name")
+          +form-group(id[1], "email", "Email address", "Enter email")
+          +form-group-password(id[1], "Password", "password")
           br
-          form(action=path method="POST")
-            if title === "Sign Up"
-              +form-group("name", "Name", "Name")
-            +form-group("email", "Email address", "Enter email")
-            +form-group-password("Password", "password")
-            br
-            button.btn(class=buttonclass type="submit")=buttonlabel
-            a.btn.btn-dark.btn-margin(href=button2path)=button2label
-    
-    include ../src/templates/footer.pug
+          button.btn(class=buttonclass type="submit")=buttonlabel
+          a.btn.btn-dark.btn-margin(href=button2path)=button2label
+
+  include ../src/templates/scripts.pug

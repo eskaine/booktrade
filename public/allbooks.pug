@@ -1,25 +1,21 @@
-include ../src/templates/mixin.pug
-
-doctype html
-html
-  include ../src/templates/head.pug
+extends ../src/templates/layout
   
-  body
-    - var active = path, isAuthenticated = true
-    include ../src/templates/navbar.pug
-    
+block content
+  .container
+    +trade
+    br
+    .container#trade-list  
+    br
     .container
-      button.btn.btn-success(type="button") Your Requested Books
-      button.btn.btn-primary.btn-margin(type="button") Pending Your Approvals
       h1 All Books
       hr
-      
-      .container
-        if books
-          each book in books
-            +book(book)
+      if books
+        each book in books
+          +book-all(book)
         
-    include ../src/templates/footer.pug
-    
-    
+  include ../src/templates/scripts.pug
+  script(src="/ajax/ajax-functions.js")
+  script(src="/ajax/dom-functions.js")
+  script(src="/js/clickController.js") 
+        
     

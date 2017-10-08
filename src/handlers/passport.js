@@ -2,6 +2,7 @@
 
 var LocalStrategy = require('passport-local').Strategy;
 var PasswordHandler = require('./passwordHandler.js');
+
 var User = require('../models/users');
 
 module.exports = function(passport) {

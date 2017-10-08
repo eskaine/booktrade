@@ -2,8 +2,6 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var bcrypt = require('bcrypt');
-var salt = Number(process.env.SALT_ROUNDS);
 
 var User = new Schema({
   name: String,
@@ -13,7 +11,7 @@ var User = new Schema({
     city: String,
     state: String
   },
-  books: [Schema.Types.Mixed]
+  requestsFor: [String]
 });
 
 module.exports = mongoose.model('User', User);

@@ -8,8 +8,22 @@ module.exports = function(app, passport) {
   var bookHandler = new BookHandler();
   var profileHandler = new ProfileHandler();
 
+  function createAuthRenderSession(req) {
+    if(!req.session.renderParams) {
+      req.session.renderParams = {
+        active: req.url,
+        isAuthenticated: req.isAuthenticated(),
+        username: req.user.name,
+        books: [],
+        requests: req.user.requestsFor.length,
+        approvals: 0
+      }
+    }
+  }
+
   function isLogged(req, res, next) {
     if (req.isAuthenticated()) {
+      createAuthRenderSession(req);
       return next();
     } else {
       res.redirect('/login');
@@ -25,18 +39,21 @@ module.exports = function(app, passport) {
   }
 
   app.route('/').get(function(req, res) {
-    var name = null;
-    if (req.user) {
-      name = req.user.name
+    console.log(req.session);
+    var params = {
+      active: '/'
+    };
+
+    if (req.isAuthenticated()) {
+      req.session.renderParams.active = req.url;
+      params = req.session.renderParams;
     }
-    res.render('index.pug', {
-      isAuthenticated: req.isAuthenticated(),
-      name: name
-    });
+    res.render('index.pug', params);
   });
 
   app.route('/login').get(alreadyLogged, function(req, res) {
     res.render('auth.pug', {
+      active: req.url,
       path: req.url,
       title: "Login",
       buttonlabel: "Login",
@@ -51,6 +68,7 @@ module.exports = function(app, passport) {
 
   app.route('/signup').get(alreadyLogged, function(req, res) {
     res.render('auth.pug', {
+      active: req.url,
       path: req.url,
       title: "Sign Up",
       buttonlabel: "Create Account",
@@ -63,9 +81,9 @@ module.exports = function(app, passport) {
     failureRedirect: '/signup'
   }));
 
-  app.route('/add').post(bookHandler.queryBook);
-
   app.route('/mybooks').get(isLogged, bookHandler.displayMyBooks);
+
+  app.route('/allbooks').get(isLogged, bookHandler.displayAllBooks);
 
   app.route('/profile')
   .get(isLogged, profileHandler.getProfile)
@@ -74,7 +92,22 @@ module.exports = function(app, passport) {
   app.route('/password')
   .post(profileHandler.updatePassword);
 
+  //send a trade request
+  app.route('/request').post(bookHandler.requestBook);
+
+  //query book from Google, add to my books
+  app.route('/add').post(bookHandler.queryBook);
+
+  //remove a book from my books
+  app.route('/remove').post(bookHandler.removeBook);
+
+  //get list of trade requests
+  app.route('/requestList').get(bookHandler.requestList)
+  //delete a trade request
+  .post(bookHandler.deleteRequest);
+
   app.route('/logout').get(function(req, res) {
+    delete req.session.renderParams;
     req.logout();
     res.redirect('/');
   });

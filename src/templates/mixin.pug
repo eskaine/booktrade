@@ -3,7 +3,7 @@ mixin heading
     h2 Heading
     p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
     p: a.btn.btn-secondary(href="#" role="button") View details &raquo;
-    
+
 mixin nav-item(href, label)
   if href === active
     li.nav-item.active
@@ -11,16 +11,38 @@ mixin nav-item(href, label)
   else
     li.nav-item
       a.nav-link(href=href)=label
-    
-mixin form-group(name, label, placeholder, value)
-  .form-group
-    label(for=name)=label
-    input.form-control(id=name type="text" name=name placeholder=placeholder value=value)
       
-mixin form-group-password(label, name)
-  .form-group
-    label(for="password")=label
-    input.form-control(id="password" type="password" name=name placeholder="Password")
+mixin trade
+  .container.grid
+    button#requestList.btn.btn-success(type="button") My Requested Books (#{requests})
+    button#approvalList.btn.btn-primary(type="button") Pending My Approvals (#{approvals})
 
-mixin book(data)
-  img.book(src=data.imageUrl)
+mixin form-group(formname, name, label, placeholder, value)
+  .form-group
+    - var inputID = formname + "-" + name
+    label(for=inputID)=label
+    input.form-control(id=inputID type="text" name=name placeholder=placeholder value=value required)
+    .invalid-feedback Invalid #{name} !
+
+mixin form-group-password(formname, label, name)
+  .form-group
+    - var inputID = formname + "-password"
+    label(for=inputID)=label
+    input.form-control(id=inputID type="password" name=name placeholder="Password" required)
+    .invalid-feedback Invalid password !
+
+mixin book-all(bookData)
+  .img-container
+    img(src=bookData.imageUrl)
+    if(bookData.isOwner === 0)
+      .overlay
+        button.btn.btn-secondary.overlay-btn(id=bookData._id type="button") Request
+
+mixin book(bookData)
+  .img-container
+    img(src=bookData.imageUrl)
+    .overlay
+      button.btn.btn-secondary.overlay-btn(id=bookData.id) Remove
+      
+      
+  

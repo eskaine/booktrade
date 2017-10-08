@@ -1,9 +1,5 @@
 'use strict';
 
-require('babel-register')({
-  presets: ['react']
-});
-
 var path = process.cwd();
 var express = require('express');
 var session = require('express-session');
@@ -24,6 +20,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -32,7 +29,8 @@ mongoose.connect(process.env.MONGO_URI, {useMongoClient: true});
 mongoose.Promise = global.Promise;
 
 app.use('/css', express.static(path + '/public/css'));
-app.use('/js', express.static(path + '/public/js'));
+app.use('/js', express.static(path + '/src/controllers'));
+app.use('/ajax', express.static(path + '/src/common'));
 
 routes(app, passport);
 

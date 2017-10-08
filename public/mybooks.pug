@@ -1,28 +1,26 @@
-include ../src/templates/mixin.pug
-
-doctype html
-html
-  include ../src/templates/head.pug
+extends ../src/templates/layout
   
-  body
-    - var active = "/mybooks", isAuthenticated = true
-    include ../src/templates/navbar.pug
-    
+block content
+  .container
+    +trade
+    br
+    .container#trade-list  
+    br
     .container
-      button.btn.btn-success(type="button") Your Requested Books
-      button.btn.btn-primary.btn-margin(type="button") Pending Your Approvals
-      form.form-inline(action="/add" method="POST")
-        h1 My Books
-        input#add.form-control(type="text" name="book" placeholder="Add Book")
-        button.btn.btn-primary(type="submit") Add
+      h1 My Books
+      .row
+        .col-md-4
+          form(action="/add" method="POST")
+            .input-group
+              input#add.form-control(type="text" name="book" placeholder="Add Book")
+              span.input-group-btn
+                button#add-btn.btn.btn-primary(type="submit") Add
       hr
+      if books
+        each book in books
+          +book(book)
       
-      .container
-        if books
-          each book in books
-            +book(book)
-        
-    include ../src/templates/footer.pug
-    
-    
-    
+  include ../src/templates/scripts.pug       
+  script(src="/ajax/ajax-functions.js")
+  script(src="/ajax/dom-functions.js")
+  script(src="/js/clickController.js")           

@@ -1,0 +1,60 @@
+.btn-margin {
+  margin-left: 1em;
+}
+
+.grid {
+  display: grid;
+  grid-gap: 1em;
+}
+
+#add-btn {
+  width: 100px;
+}
+
+#approvalList,
+#requestList {
+  width: 100%;
+}
+
+.img-container {
+  display: inline-block;
+  position: relative;
+  padding: 0.5em;
+}
+
+.img {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: inherit;
+  width: inherit;
+  opacity: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.img-container:hover .overlay {
+  opacity: 1;
+}
+
+.overlay-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 3fr;
+  }
+}

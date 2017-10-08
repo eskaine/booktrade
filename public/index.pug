@@ -1,23 +1,16 @@
-include ../src/templates/mixin.pug
-    
-doctype html
-html
-  include ../src/templates/head.pug
+extends ../src/templates/layout
   
-  body
-    - var active = "/"
-    include ../src/templates/navbar.pug
-    
-    .jumbotron
-      .container
-        h1.display-3 bookTrade
-        p Unwanted books? Trade them away!
-        p: a.btn.btn-primary.btn-lg(href="#" role="button") Learn more &raquo;
-        
+block content
+  .jumbotron
     .container
-      .row
-        +heading
-        +heading
-        +heading
+      h1.display-3 bookTrade
+      p Unwanted books? Trade them away!
+      p: a.btn.btn-primary.btn-lg(href="#" role="button") Learn more &raquo;
         
-    include ../src/templates/footer.pug
+  .container
+    .row
+      +heading
+      +heading
+      +heading
+      
+  include ../src/templates/scripts.pug
