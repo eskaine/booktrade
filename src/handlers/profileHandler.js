@@ -21,6 +21,7 @@ function ProfileHandler() {
   }
 
   this.updateProfile = function(req, res) {
+
     var profile = {
       name: req.body.name,
       address: {
@@ -34,6 +35,10 @@ function ProfileHandler() {
     }, profile).exec(function(err, result) {
       if (err)
         throw err;
+        
+      req.session.renderParams.name = req.body.name;
+      req.session.renderParams.city = req.body.city;
+      req.session.renderParams.state = req.body.state;
       res.redirect('/profile');
     });
   }

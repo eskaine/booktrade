@@ -11,7 +11,7 @@ var User = new Schema({
     city: String,
     state: String
   },
-  requestsFor: [String]
+  requestsCount: Number
 });
 
 module.exports = mongoose.model('User', User);

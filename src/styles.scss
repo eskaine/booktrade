@@ -1,3 +1,16 @@
+@mixin button($topPos) {
+  position: absolute;
+  top: $topPos;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+@mixin trade-button-size {
+  width: 90px;
+  height: 38px;
+}
+
 .btn-margin {
   margin-left: 1em;
 }
@@ -45,11 +58,17 @@
 }
 
 .overlay-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
+  @include button(50%);
+}
+
+.approve-btn {
+  @include trade-button-size;
+  @include button(35%);
+}
+
+.reject-btn {
+  @include trade-button-size;
+  @include button(65%);
 }
 
 /* Medium devices (desktops, 992px and up) */

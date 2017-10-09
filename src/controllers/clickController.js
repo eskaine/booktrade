@@ -7,46 +7,47 @@ var approvalBooksBtn = document.getElementById("approvalList");
 (function() {
 
   requestedBooksBtn.addEventListener("click", function(event) {
-    ajaxFunctions.get(appUrl + "/requestList", function(response) {
+    ajaxFunctions.ajaxRequest("GET", appUrl + "/requestList", function(response) {
       response = JSON.parse(response);
+      //generate list
       domFunctions.showRequestedList(response);
     });
   });
 
+  approvalBooksBtn.addEventListener("click", function(event) {
+    ajaxFunctions.ajaxRequest("GET", appUrl + "/approvalList", function(response) {
+      response = JSON.parse(response);
+      //generate list
+      domFunctions.showApprovalList(response.books);
+      //update button label text
+      approvalBooksBtn.innerHTML = "Pending My Approvals (" + response.count + ")";
+    });
+  });
+
   window.addEventListener("click", function(e) {
-
-    removeButton(e);
-    requestButton(e);
-
+    var buttonName = e.target.innerHTML;
+    //filter button click events
+    if(e.target.tagName === "BUTTON" &&
+      ( buttonName === "Request" || buttonName === "Delete" ||   buttonName === "Remove" || buttonName === "Approve" || buttonName === "Reject")
+    ) {
+      //prepare url
+      var url = "/" + e.target.innerHTML.toLowerCase() + "/";
+      //post request to url with book id
+      ajaxFunctions.ajaxRequest("POST", appUrl + url + e.target.id, function(response) {
+          response = JSON.parse(response);
+          //remove book from list
+          var elementToRemove = e.target.parentElement.parentElement;
+          elementToRemove.parentElement.removeChild(elementToRemove);
+          if(e.target.innerHTML === "Request" || e.target.innerHTML === "Delete") {
+            //update button label text with current count
+            requestedBooksBtn.innerHTML = "My Requested Books (" + response.count + ")";
+          }
+          if(e.target.innerHTML === "Approve" || e.target.innerHTML === "Reject") {
+            //update button label text with current count
+            approvalBooksBtn.innerHTML = "Pending My Approvals (" + response.count + ")";
+          }
+      });
+    }
   });
 
 })();
-
-function removeButton(event) {
-  if (event.target.tagName === "BUTTON" && event.target.innerHTML === "Remove") {
-    ajaxFunctions.post(appUrl + "/remove", "id=" + event.target.id, function(response) {
-      if (response) {
-        var elementToRemove = event.target.parentElement.parentElement;
-        elementToRemove.parentElement.removeChild(elementToRemove);
-      }
-    });
-  }
-}
-
-function requestButton(event) {
-  if(event.target.tagName === "BUTTON" && (event.target.innerHTML === "Request" || event.target.innerHTML === "Delete")) {
-    var url = "/request";
-
-    if(event.target.innerHTML === "Delete") {
-      url = "/requestList";
-    }
-
-    ajaxFunctions.post(appUrl + url, "book_id=" + event.target.id, function(response) {
-      console.log(response);
-      response = JSON.parse(response);
-      var elementToRemove = event.target.parentElement.parentElement;
-      elementToRemove.parentElement.removeChild(elementToRemove);
-      requestedBooksBtn.innerHTML = "My Requested Books (" + response.totalRequests + ")";
-    });
-  }
-}

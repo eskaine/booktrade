@@ -1,11 +1,13 @@
 'use strict';
 
 var BookHandler = require('../handlers/bookHandler.js');
+var TradeHandler = require('../handlers/tradeHandler.js');
 var ProfileHandler = require('../handlers/profileHandler.js')
 
 module.exports = function(app, passport) {
 
   var bookHandler = new BookHandler();
+  var tradeHandler = new TradeHandler();
   var profileHandler = new ProfileHandler();
 
   function createAuthRenderSession(req) {
@@ -15,7 +17,7 @@ module.exports = function(app, passport) {
         isAuthenticated: req.isAuthenticated(),
         username: req.user.name,
         books: [],
-        requests: req.user.requestsFor.length,
+        requests: req.user.requestsCount,
         approvals: 0
       }
     }
@@ -39,7 +41,6 @@ module.exports = function(app, passport) {
   }
 
   app.route('/').get(function(req, res) {
-    console.log(req.session);
     var params = {
       active: '/'
     };
@@ -87,24 +88,26 @@ module.exports = function(app, passport) {
 
   app.route('/profile')
   .get(isLogged, profileHandler.getProfile)
-  .post(profileHandler.updateProfile);
+  .post(isLogged, profileHandler.updateProfile);
 
-  app.route('/password')
-  .post(profileHandler.updatePassword);
-
-  //send a trade request
-  app.route('/request').post(bookHandler.requestBook);
+  app.route('/password').post(isLogged, profileHandler.updatePassword);
 
   //query book from Google, add to my books
-  app.route('/add').post(bookHandler.queryBook);
+  app.route('/add').post(isLogged, bookHandler.queryBook);
 
-  //remove a book from my books
-  app.route('/remove').post(bookHandler.removeBook);
+  app.route('/remove/:bookID').post(isLogged, bookHandler.removeBook);
 
-  //get list of trade requests
-  app.route('/requestList').get(bookHandler.requestList)
-  //delete a trade request
-  .post(bookHandler.deleteRequest);
+  app.route('/requestList').get(isLogged, tradeHandler.requestList);
+
+  app.route('/approvalList').get(isLogged, tradeHandler.approvalList);
+
+  app.route('/request/:bookID').post(isLogged, tradeHandler.requestBook);
+
+  app.route('/delete/:bookID').post(isLogged, tradeHandler.deleteRequest);
+
+  app.route('/approve/:bookID').post(isLogged, tradeHandler.approveRequest);
+
+  app.route('/reject/:bookID').post(isLogged, tradeHandler.deleteRequest);
 
   app.route('/logout').get(function(req, res) {
     delete req.session.renderParams;

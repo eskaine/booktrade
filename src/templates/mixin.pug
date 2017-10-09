@@ -14,15 +14,18 @@ mixin nav-item(href, label)
       
 mixin trade
   .container.grid
-    button#requestList.btn.btn-success(type="button") My Requested Books (#{requests})
-    button#approvalList.btn.btn-primary(type="button") Pending My Approvals (#{approvals})
+    button#requestList.btn.btn-primary(type="button") My Requested Books (#{requests})
+    button#approvalList.btn.btn-success(type="button") Pending My Approvals (#{approvals})
 
-mixin form-group(formname, name, label, placeholder, value)
+mixin form-group(formname, name, label, placeholder, value, validation)
   .form-group
     - var inputID = formname + "-" + name
     label(for=inputID)=label
-    input.form-control(id=inputID type="text" name=name placeholder=placeholder value=value required)
-    .invalid-feedback Invalid #{name} !
+    if validation
+      input.form-control(id=inputID type="text" name=name placeholder=placeholder value=value required)
+      .invalid-feedback Invalid #{name} !
+    else
+      input.form-control(id=inputID type="text" name=name placeholder=placeholder value=value)
 
 mixin form-group-password(formname, label, name)
   .form-group
@@ -36,13 +39,15 @@ mixin book-all(bookData)
     img(src=bookData.imageUrl)
     if(bookData.isOwner === 0)
       .overlay
-        button.btn.btn-secondary.overlay-btn(id=bookData._id type="button") Request
+        button.btn.btn-primary.overlay-btn(id=bookData._id type="button") Request
 
 mixin book(bookData)
+
   .img-container
     img(src=bookData.imageUrl)
-    .overlay
-      button.btn.btn-secondary.overlay-btn(id=bookData.id) Remove
+    unless bookData.isRequested
+      .overlay
+        button.btn.btn-danger.overlay-btn(id=bookData.id) Remove
       
       
   

@@ -43,6 +43,24 @@
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%); }
 
+.approve-btn {
+  width: 90px;
+  height: 38px;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); }
+
+.reject-btn {
+  width: 90px;
+  height: 38px;
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); }
+
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .grid {

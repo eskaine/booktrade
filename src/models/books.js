@@ -8,7 +8,8 @@ var Book = new Schema({
   title: String,
   imageUrl: String,
   owner_id: String,
-  request_from: String
+  request_from: String,
+  isApproved: Boolean
 });
 
 module.exports = mongoose.model('Book', Book);

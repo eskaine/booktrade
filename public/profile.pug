@@ -7,9 +7,9 @@ block content
         h1 Update Profile
         br
         form(action="/profile" method="POST")
-          +form-group("name", "Name", "Name", username)
-          +form-group("city", "City", "City", city)
-          +form-group("state", "State", "State", state)
+          +form-group("profile", "name", "Name", "Name", username, false)
+          +form-group("profile", "city", "City", "City", city, false)
+          +form-group("profile", "state", "State", "State", state, false)
           br
           button.btn(class="btn btn-primary" type="submit") Save Changes
         br
